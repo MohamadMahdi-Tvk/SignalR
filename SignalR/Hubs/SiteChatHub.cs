@@ -11,6 +11,8 @@ public class SiteChatHub : Hub
 
     public override Task OnConnectedAsync()
     {
+        var connectionId = Context.ConnectionId;
+
         return base.OnConnectedAsync();
     }
 
