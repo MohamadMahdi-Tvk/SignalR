@@ -9,7 +9,11 @@ namespace SignalR
             var builder = WebApplication.CreateBuilder(args);
 
 
-            builder.Services.AddControllersWithViews();
+            var mvcBuilder = builder.Services.AddControllersWithViews();
+
+#if DEBUG
+            mvcBuilder.AddRazorRuntimeCompilation();
+#endif
 
 
             builder.Services.AddSignalR();
