@@ -38,6 +38,15 @@ function sendMessage(text) {
     connection.invoke('SendNewMessage', "بازدید کننده", text);
 }
 
+
+connection.on('getNewMessage', getMessage);
+
+function getMessage(sender, message, time) {
+
+    $("#Messages").append("<li><div><span class='name'>" + sender + "</span><span class='time'>" + time + "</span></div><div class='message'>" + message + "</div></li>")
+};
+
+
 $(document).ready(function () {
 
     Init();
