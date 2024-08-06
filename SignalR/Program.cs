@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SignalR.Contexts;
 using SignalR.Hubs;
+using SignalR.Models.Services;
 
 namespace SignalR
 {
@@ -15,6 +18,10 @@ namespace SignalR
             mvcBuilder.AddRazorRuntimeCompilation();
 #endif
 
+            string conectionString = "Data Source=.;Initial Catalog=SignalRDB;Integrated Security=True;TrustServerCertificate=True";
+            builder.Services.AddDbContext<DataBaseContext>(option => option.UseSqlServer(conectionString));
+
+            builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 
             builder.Services.AddSignalR();
 
