@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SignalR.Contexts;
 using SignalR.Hubs;
@@ -23,6 +24,15 @@ namespace SignalR
 
             builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 
+            builder.Services.AddAuthentication(option =>
+            {
+                option.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                .AddCookie(Options =>
+                {
+                    Options.LoginPath = "/Home/login";
+                });
+
             builder.Services.AddSignalR();
 
             var app = builder.Build();
@@ -38,6 +48,7 @@ namespace SignalR
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
