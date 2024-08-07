@@ -56,6 +56,8 @@ namespace SignalR
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapHub<SiteChatHub>("/chathub");
+            app.MapHub<SupportHub>("/supporthub");
+
             app.Run();
         }
     }

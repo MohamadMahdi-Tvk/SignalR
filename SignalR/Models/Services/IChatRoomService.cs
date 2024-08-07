@@ -7,6 +7,7 @@ public interface IChatRoomService
 {
     Task<Guid> CreateChatRoom(string ConnectionId);
     Task<Guid> GetChatRoomForConnection(string CoonectionId);
+    Task<List<Guid>> GetAllrooms();
 }
 
 public class ChatRoomService : IChatRoomService
@@ -38,5 +39,12 @@ public class ChatRoomService : IChatRoomService
     {
         var chatRoom = _context.ChatRooms.SingleOrDefault(p => p.ConnectionId == CoonectionId);
         return await Task.FromResult(chatRoom.Id);
+    }
+
+    public async Task<List<Guid>> GetAllrooms()
+    {
+        var rooms = _context.ChatRooms.Select(p =>
+          p.Id).ToList();
+        return await Task.FromResult(rooms);
     }
 }
