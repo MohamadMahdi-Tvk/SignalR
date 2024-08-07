@@ -23,6 +23,7 @@ namespace SignalR
             builder.Services.AddDbContext<DataBaseContext>(option => option.UseSqlServer(conectionString));
 
             builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
+            builder.Services.AddScoped<IMessageService, MessageService>();
 
             builder.Services.AddAuthentication(option =>
             {

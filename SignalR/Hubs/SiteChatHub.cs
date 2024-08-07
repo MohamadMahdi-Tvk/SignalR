@@ -6,10 +6,12 @@ namespace SignalR.Hubs;
 public class SiteChatHub : Hub
 {
     private readonly IChatRoomService _chatRoomService;
+    private readonly IMessageService _messageService;
 
-    public SiteChatHub(IChatRoomService chatRoomService)
+    public SiteChatHub(IChatRoomService chatRoomService, IMessageService messageService)
     {
         _chatRoomService = chatRoomService;
+        _messageService = messageService;
     }
 
     public async Task SendNewMessage(string Sender, string Message)
@@ -19,8 +21,16 @@ public class SiteChatHub : Hub
 
         var roomId = await _chatRoomService.GetChatRoomForConnection(Context.ConnectionId);
 
+        MessageDto messageDto = new MessageDto()
+        {
+            Message = Message,
+            Sender = Sender,
+            Time = DateTime.Now,
+        };
+
+        await _messageService.SaveChatMessage(roomId, messageDto);
         await Clients.Groups(roomId.ToString())
-            .SendAsync("getNewMessage", Sender, Message, DateTime.Now.ToShortDateString());
+            .SendAsync("getNewMessage", messageDto.Sender, messageDto.Message, messageDto.Time.ToShortDateString());
     }
 
     public override async Task OnConnectedAsync()
