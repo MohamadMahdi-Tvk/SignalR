@@ -16,7 +16,27 @@ var chatConnection = new signalR.HubConnectionBuilder()
 function Init() {
     supportConnection.start();
     chatConnection.start();
+
+    //هر زمان دکمه "ارسال" در فرم چت باکس زده شد این کد برای سابمیت فرم اجرا می شود
+    var answerForm = $("#answerForm");
+
+    answerForm.on('submit', function (e) {
+        e.preventDefault();
+
+        var text = e.target[0].value;
+        e.target[0].value = '';
+        sendMessage(text);
+    });
+
 };
+
+function sendMessage(text) {
+    if (text && text.length) {
+        supportConnection.invoke('SendMessage', activeRoomId, text);
+    }
+
+}
+
 
 chatConnection.on('getNewMessage', showMessage);
 
