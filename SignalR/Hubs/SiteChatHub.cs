@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using SignalR.Models.Services;
 
 namespace SignalR.Hubs;
@@ -31,6 +32,29 @@ public class SiteChatHub : Hub
         await _messageService.SaveChatMessage(roomId, messageDto);
         await Clients.Groups(roomId.ToString())
             .SendAsync("getNewMessage", messageDto.Sender, messageDto.Message, messageDto.Time.ToShortDateString());
+    }
+
+    /// <summary>
+    /// پیوستن پشتیبان ها به گروه
+    /// </summary>
+    /// <param name="roomId"></param>
+    /// <returns></returns>
+    /// 
+    [Authorize]
+    public async Task JoinRoom(Guid roomId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
+    }
+
+    /// <summary>
+    /// ترک گروه توسط پشتیبان
+    /// </summary>
+    /// <param name="roomId"></param>
+    /// <returns></returns>
+    [Authorize]
+    public async Task LeaveRoom(Guid roomId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId.ToString());
     }
 
     public override async Task OnConnectedAsync()
